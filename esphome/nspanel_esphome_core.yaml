@@ -174,10 +174,12 @@ script:  # Scripts
           if (page == "mem") {
             if (component == "relay1_icon_color") {
               id(home_relay1_icon_color) = color;
-              if (relay_1->state) disp1->set_component_font_color("home.chip_relay1", color);
+              // Relay icons are hidden - no need to update colors
+              // if (relay_1->state) disp1->set_component_font_color("home.chip_relay1", color);
             } else if (component == "relay2_icon_color") {
               id(home_relay2_icon_color) = color;
-              if (relay_2->state) disp1->set_component_font_color("home.chip_relay2", color);
+              // Relay icons are hidden - no need to update colors
+              // if (relay_2->state) disp1->set_component_font_color("home.chip_relay2", color);
             }
           }
 
@@ -191,10 +193,12 @@ script:  # Scripts
               id(mui_decimal_separator) = txt[0];
             } else if (component == "relay1_icon") {
               id(home_relay1_icon) = txt;
-              disp1->set_component_text("home.chip_relay1", id(home_relay1_icon).c_str());
+              // Hide relay1 icon - user requested to disable relay status display
+              disp1->send_command("vis home.chip_relay1,0");
             } else if (component == "relay2_icon") {
               id(home_relay2_icon) = txt;
-              disp1->set_component_text("home.chip_relay2", id(home_relay2_icon).c_str());
+              // Hide relay2 icon - user requested to disable relay status display
+              disp1->send_command("vis home.chip_relay2,0");
             }
           }
 
@@ -411,10 +415,12 @@ script:  # Scripts
     then:
       - lambda: |-
           if (relay_mask & 1) {  // Chip - Relay 1
-            disp1->set_component_font_color("home.chip_relay1", relay_1->state ? id(home_relay1_icon_color) : 0);
+            // Hide relay1 icon - user requested to disable relay status display
+            disp1->send_command("vis home.chip_relay1,0");
           }
           if (relay_mask & 2) {  // Chip - Relay 2
-            disp1->set_component_font_color("home.chip_relay2", relay_2->state ? id(home_relay2_icon_color) : 0);
+            // Hide relay2 icon - user requested to disable relay status display
+            disp1->send_command("vis home.chip_relay2,0");
           }
 
   - id: !extend stop_all
